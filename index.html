@@ -3,24 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>라플 두뇌 챌린지 - 슈미트 테이블</title>
+    <title>라플 두뇌 챌린지</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
-        body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; overflow: hidden; }
-        .grid-cell { aspect-ratio: 1 / 1; transition: all 0.1s ease-in-out; }
-        .grid-cell:active { transform: scale(0.95); }
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #f8fafc; }
         .hidden-view { display: none !important; }
-        
-        /* 오답 진동 효과 */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
-        }
-        .error-shake { animation: shake 0.2s ease-in-out 2; }
-
-        /* 광고 배너 롤링 애니메이션 (상하 롤링) */
+        .grid-cell { aspect-ratio: 1 / 1; }
         @keyframes rolling {
             0% { transform: translateY(0); }
             45% { transform: translateY(0); }
@@ -28,223 +17,210 @@
             95% { transform: translateY(-50%); }
             100% { transform: translateY(0); }
         }
-        .rolling-wrapper {
-            animation: rolling 6s infinite ease-in-out;
-        }
+        .rolling-wrapper { animation: rolling 5s infinite ease-in-out; }
+        #bg-ad-content { background: linear-gradient(145deg, #dbeafe 0%, #eff6ff 100%); }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="text-slate-800">
 
-    <div id="view-intro" class="flex flex-col items-center justify-center min-h-screen p-6 text-center">
-        <div class="mb-8">
-            <div class="inline-block p-3 bg-blue-100 rounded-2xl mb-4 text-4xl">🧠</div>
-            <h1 class="text-3xl font-extrabold text-slate-900 mb-2">슈미트 테이블</h1>
-            <p class="text-slate-500 text-sm leading-relaxed">1부터 25까지 순서대로 터치하세요.<br>소수점 2자리 차이로 순위가 결정됩니다!</p>
-        </div>
+    <div id="view-intro" class="flex flex-col items-center justify-center min-h-screen p-6">
+        <div class="w-full max-w-sm flex flex-col space-y-8">
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-[22px] shadow-lg mb-4">
+                    <span class="text-3xl text-white">⚡</span>
+                </div>
+                <h1 class="text-3xl font-black text-slate-900 mb-1 tracking-tight">슈미트 테이블</h1>
+                <p class="text-blue-600 font-bold text-sm">인지 반응 및 집중력 테스트</p>
+            </div>
 
-        <div class="w-full max-w-xs space-y-4">
-            <input type="text" id="nickname-input" placeholder="닉네임을 입력하세요" 
-                class="w-full px-4 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-center font-semibold text-lg">
-            
-            <button onclick="checkAndStart()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-95 text-lg">
-                게임 시작하기
-            </button>
-            
-            <button onclick="showRanking()" class="w-full py-4 bg-white text-slate-600 font-semibold rounded-2xl border border-slate-200 shadow-sm">
-                순위 확인하기
-            </button>
+            <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-3">
+                <div class="flex items-center space-x-3 text-sm font-medium">
+                    <span class="bg-blue-50 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+                    <p>1부터 25까지 순서대로 터치</p>
+                </div>
+                <div class="flex items-center space-x-3 text-sm font-medium">
+                    <span class="bg-blue-50 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+                    <p>숫자가 사라지며 배경이 나타납니다</p>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <input type="text" id="nickname-input" placeholder="닉네임을 입력하세요" 
+                    class="w-full px-5 py-4 rounded-2xl border-2 border-slate-100 focus:border-blue-500 focus:outline-none text-center font-bold text-lg bg-white">
+                <button onclick="checkAndStart()" class="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-all text-lg">챌린지 시작하기</button>
+                <button onclick="showRanking()" class="w-full py-2 text-slate-400 font-semibold text-sm">실시간 순위 확인</button>
+            </div>
         </div>
     </div>
 
     <div id="view-game" class="hidden-view flex flex-col items-center justify-center min-h-screen p-4">
-        <div class="w-full max-w-md flex justify-between items-center bg-white p-5 rounded-3xl shadow-sm mb-4 border border-slate-100">
-            <div class="text-center flex-1 border-r border-slate-100">
-                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">NEXT</span>
-                <span id="next-number" class="text-3xl font-black text-blue-600">1</span>
-            </div>
-            <div class="text-center flex-1">
-                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">TIME</span>
-                <span id="timer" class="text-3xl font-black text-slate-800 tabular-nums">0.00s</span>
-            </div>
-        </div>
-
-        <div id="game-board" class="grid grid-cols-5 gap-2 w-full max-w-md bg-white p-2 rounded-3xl shadow-xl border border-slate-100">
-            </div>
-
-        <div class="w-full max-w-md mt-6 overflow-hidden bg-slate-100 rounded-xl border border-slate-200 h-12 relative">
-            <div class="rolling-wrapper flex flex-col h-[200%]">
-                <div class="h-12 flex items-center justify-center px-4 space-x-2">
-                    <span class="bg-blue-500 text-[10px] text-white px-2 py-0.5 rounded font-bold uppercase">AD</span>
-                    <span class="text-slate-600 text-sm font-medium">혹시 모를 상황에 대비해서</span>
+        <div class="w-full max-w-sm flex flex-col">
+            <div class="flex justify-between items-center bg-white p-4 rounded-t-3xl border border-slate-100 shadow-sm relative z-20">
+                <div class="text-center flex-1 border-r border-slate-50">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">NEXT</span>
+                    <span id="next-number" class="block text-2xl font-black text-blue-600">1</span>
                 </div>
-                <div class="h-12 flex items-center justify-center px-4 space-x-2">
-                    <span class="bg-blue-500 text-[10px] text-white px-2 py-0.5 rounded font-bold uppercase">AD</span>
-                    <span class="text-slate-600 text-sm font-medium">가족을 위해 정기보험으로 대비하기</span>
+                <div class="text-center flex-1">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TIME</span>
+                    <span id="timer" class="block text-2xl font-black text-slate-800 tabular-nums">0.00s</span>
                 </div>
             </div>
+
+            <div class="overflow-hidden bg-indigo-50 border-x border-indigo-100 h-12 relative z-20">
+                <div class="rolling-wrapper flex flex-col h-[200%] text-[15px] font-bold">
+                    <div class="h-12 flex items-center justify-center px-4"><span class="text-indigo-900 text-shadow-sm">혹시 모를 상황에 대비해서</span></div>
+                    <div class="h-12 flex items-center justify-center px-4"><span class="text-indigo-900 text-shadow-sm">가족을 위해 정기보험으로 대비하기</span></div>
+                </div>
+            </div>
+
+            <div class="relative w-full rounded-b-3xl shadow-xl border border-slate-100 overflow-hidden bg-white z-10">
+                <div id="bg-ad-layer" class="absolute inset-0 flex items-center justify-center p-6 opacity-0 transition-opacity duration-500 z-0">
+                    <div id="bg-ad-content" class="w-full h-full rounded-2xl flex flex-col items-center justify-center text-center border-2 border-blue-200 p-4">
+                        <p class="text-blue-800 font-bold text-lg mb-1">가족을 위한 확실한 선택</p>
+                        <p class="text-blue-900 font-black text-3xl tracking-tight break-keep font-sans">교보라플<br>정기보험</p>
+                    </div>
+                </div>
+                <div id="game-board" class="grid grid-cols-5 gap-1.5 p-2 relative z-10"></div>
+            </div>
+            <button onclick="goHome()" class="mt-8 py-2 text-slate-400 text-xs font-medium underline underline-offset-4 text-center">그만하기</button>
         </div>
-        
-        <button onclick="goHome()" class="mt-6 text-slate-400 font-medium hover:text-slate-600 text-sm">그만두기</button>
     </div>
 
     <div id="view-ranking" class="hidden-view fixed inset-0 bg-white z-50 flex flex-col">
-        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-            <h2 class="text-xl font-bold">명예의 전당 (TOP 10)</h2>
-            <button onclick="goHome()" class="text-slate-400 text-3xl">&times;</button>
+        <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+            <h2 class="text-xl font-bold font-sans">TOP 10 명예의 전당</h2>
+            <button onclick="goHome()" class="text-slate-400 text-3xl font-light">&times;</button>
         </div>
-        <div class="flex-1 overflow-y-auto p-6">
-            <table class="w-full">
-                <thead>
-                    <tr class="text-left text-slate-400 text-xs uppercase border-b border-slate-100">
-                        <th class="pb-3 font-semibold w-16">순위</th>
-                        <th class="pb-3 font-semibold">닉네임</th>
-                        <th class="pb-3 font-semibold text-right">기록</th>
-                    </tr>
-                </thead>
-                <tbody id="ranking-list">
-                    </tbody>
-            </table>
-        </div>
-        <div class="p-6 bg-white border-t border-slate-100">
-            <button onclick="goHome()" class="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl shadow-lg">홈으로 돌아가기</button>
-        </div>
+        <div class="flex-1 overflow-y-auto px-6"><table class="w-full border-collapse"><tbody id="ranking-list"></tbody></table></div>
+        <div class="p-6 border-t bg-white"><button onclick="goHome()" class="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl shadow-lg">메인으로 돌아가기</button></div>
     </div>
 
     <div id="result-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-6 z-[60]">
-        <div class="bg-white rounded-[40px] p-8 w-full max-w-xs text-center shadow-2xl scale-in">
-            <div class="text-6xl mb-6">🏆</div>
-            <h2 class="text-xl font-bold text-slate-800 mb-1">놀라운 집중력!</h2>
-            <p id="result-nickname" class="text-blue-600 font-semibold mb-3"></p>
-            <p id="result-time" class="text-5xl font-black text-slate-900 mb-8 tracking-tight">0.00s</p>
-            <button onclick="goHome()" class="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-all">
-                랭킹 확인하기
-            </button>
+        <div class="bg-white rounded-[40px] p-8 w-full max-w-xs text-center shadow-2xl">
+            <div class="text-5xl mb-4 text-yellow-400">🏆</div>
+            <p id="result-nickname" class="text-blue-600 font-bold mb-1"></p>
+            <p id="result-time" class="text-4xl font-black text-slate-900 mb-6 tracking-tight">0.00s</p>
+            <button onclick="handleShowRankingClick()" class="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">순위 확인하기</button>
         </div>
     </div>
 
+    <div id="view-ad-popup" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md hidden flex flex-col items-center justify-center p-6 z-[100]">
+        <button onclick="closeAdPopup()" class="absolute top-6 right-6 text-white bg-white/20 w-10 h-10 rounded-full flex items-center justify-center text-2xl font-light">&times;</button>
+        
+        <a href="https://m.lifeplanet.co.kr:444/startmain/main.dev" target="_blank" class="w-full max-w-xs block active:scale-95 transition-transform">
+            <div id="bg-ad-content" class="aspect-[3/4] rounded-[40px] flex flex-col items-center justify-center text-center p-8 border-4 border-blue-400/30">
+                <p class="text-blue-800 font-bold text-xl mb-3">가족을 위한 확실한 선택</p>
+                <p class="text-blue-900 font-black text-4xl leading-tight mb-8">교보라플<br>정기보험</p>
+                <div class="px-8 py-3 bg-blue-600 text-white font-black rounded-full text-lg shadow-xl shadow-blue-500/50">자세히 알아보기</div>
+            </div>
+        </a>
+        <p id="ad-timer-text" class="mt-8 text-white/60 text-sm font-medium">3초 후 자동으로 닫힙니다</p>
+    </div>
+
     <script>
-        const views = {
-            intro: document.getElementById('view-intro'),
-            game: document.getElementById('view-game'),
-            ranking: document.getElementById('view-ranking')
-        };
-        const board = document.getElementById('game-board');
-        const timerDisplay = document.getElementById('timer');
-        const nextNumDisplay = document.getElementById('next-number');
-        const nicknameInput = document.getElementById('nickname-input');
-        const resultModal = document.getElementById('result-modal');
+        const views = { intro: document.getElementById('view-intro'), game: document.getElementById('view-game'), ranking: document.getElementById('view-ranking'), adPopup: document.getElementById('view-ad-popup') };
+        const board = document.getElementById('game-board'), timerDisplay = document.getElementById('timer'), nextNumDisplay = document.getElementById('next-number');
+        const nicknameInput = document.getElementById('nickname-input'), resultModal = document.getElementById('result-modal'), bgAdLayer = document.getElementById('bg-ad-layer');
 
-        let nextNumber = 1;
-        let timerInterval = null;
-        let startTime = null;
-        let isGameRunning = false;
-        let currentNickname = "";
+        let nextNumber = 1, timerInterval = null, startTime = null, isGameRunning = false, currentNickname = "", adTimer = null;
 
-        function switchView(viewName) {
-            Object.values(views).forEach(v => v.classList.add('hidden-view'));
-            views[viewName].classList.remove('hidden-view');
-        }
+        function switchView(v) { Object.values(views).forEach(x => x.classList.add('hidden-view')); views[v].classList.remove('hidden-view'); }
 
         function checkAndStart() {
-            const nick = nicknameInput.value.trim();
-            if (!nick) {
-                alert("닉네임을 입력해주세요!");
-                return;
-            }
-            currentNickname = nick;
-            switchView('game');
-            initGame();
+            currentNickname = nicknameInput.value.trim();
+            if (!currentNickname) { alert("닉네임을 입력해 주세요!"); return; }
+            switchView('game'); initGame();
         }
 
+        function updateAdOpacity() { bgAdLayer.style.opacity = ((nextNumber - 1) / 25).toFixed(2); }
+
         function initGame() {
-            nextNumber = 1;
-            nextNumDisplay.textContent = '1';
-            timerDisplay.textContent = '0.00s';
-            createBoard();
-            
+            nextNumber = 1; nextNumDisplay.textContent = '1'; timerDisplay.textContent = '0.00s';
+            updateAdOpacity(); createBoard();
             setTimeout(() => {
-                isGameRunning = true;
-                startTime = Date.now();
-                timerInterval = setInterval(() => {
-                    const elapsed = (Date.now() - startTime) / 1000;
-                    // 소수점 2자리 실시간 표시
-                    timerDisplay.textContent = elapsed.toFixed(2) + 's';
-                }, 10);
-            }, 300);
+                isGameRunning = true; startTime = Date.now();
+                timerInterval = setInterval(() => { timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(2) + 's'; }, 10);
+            }, 400);
         }
 
         function createBoard() {
             board.innerHTML = '';
-            const numbers = Array.from({length: 25}, (_, i) => i + 1);
-            numbers.sort(() => Math.random() - 0.5);
-
-            numbers.forEach(num => {
+            const nums = Array.from({length: 25}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+            nums.forEach(num => {
                 const cell = document.createElement('div');
-                cell.className = 'grid-cell flex items-center justify-center bg-slate-50 border border-slate-100 text-2xl font-black text-slate-700 rounded-2xl cursor-pointer active:bg-blue-100 active:text-blue-600';
+                cell.className = 'grid-cell flex items-center justify-center bg-white/95 border border-slate-100 text-xl font-black text-slate-700 rounded-2xl cursor-pointer active:bg-blue-600 active:text-white transition-all shadow-sm z-10';
                 cell.textContent = num;
-                cell.onclick = () => handleCellClick(num, cell);
+                cell.onclick = () => {
+                    if (!isGameRunning) return;
+                    if (num === nextNumber) {
+                        cell.classList.add('opacity-0', 'pointer-events-none');
+                        nextNumber++; updateAdOpacity();
+                        if (nextNumber > 25) endGame(); else nextNumDisplay.textContent = nextNumber;
+                    }
+                };
                 board.appendChild(cell);
             });
         }
 
-        function handleCellClick(num, element) {
-            if (!isGameRunning) return;
-
-            if (num === nextNumber) {
-                element.classList.add('invisible'); // 맞힌 숫자는 사라지게 하여 시인성 확보
-                if (nextNumber === 25) {
-                    endGame();
-                } else {
-                    nextNumber++;
-                    nextNumDisplay.textContent = nextNumber;
-                }
-            } else {
-                element.classList.add('error-shake', 'bg-red-50', 'text-red-500');
-                setTimeout(() => element.classList.remove('error-shake', 'bg-red-50', 'text-red-500'), 400);
-            }
-        }
-
         function endGame() {
-            clearInterval(timerInterval);
-            isGameRunning = false;
-            // 최종 기록 계산 (소수점 2자리 고정)
-            const finalTime = ((Date.now() - startTime) / 1000).toFixed(2);
-            
-            saveRecord(currentNickname, finalTime);
-            
-            document.getElementById('result-nickname').textContent = `${currentNickname}님 기록`;
-            document.getElementById('result-time').textContent = `${finalTime}s`;
-            resultModal.classList.remove('hidden');
+            clearInterval(timerInterval); isGameRunning = false; bgAdLayer.style.opacity = '1';
+            const t = ((Date.now() - startTime) / 1000).toFixed(2);
+            saveRecord(currentNickname, t);
+            setTimeout(() => {
+                document.getElementById('result-nickname').textContent = currentNickname + "님 기록";
+                document.getElementById('result-time').textContent = t + "s";
+                resultModal.classList.remove('hidden');
+            }, 500);
         }
 
-        function saveRecord(nickname, time) {
-            let records = JSON.parse(localStorage.getItem('schulte_v2') || '[]');
-            // 기록은 항상 숫자로 변환하여 비교
-            records.push({ nickname, time: parseFloat(time), date: new Date().toLocaleDateString() });
-            records.sort((a, b) => a.time - b.time);
-            records = records.slice(0, 10);
-            localStorage.setItem('schulte_v2', JSON.stringify(records));
+        // [순위 확인하기] 버튼 클릭 시 동작
+        function handleShowRankingClick() {
+            resultModal.classList.add('hidden');
+            showAdPopup(); // 3초 광고 먼저 보여줌
+        }
+
+        // 전면 광고 팝업 실행
+        function showAdPopup() {
+            views.adPopup.classList.remove('hidden');
+            let timeLeft = 3;
+            document.getElementById('ad-timer-text').textContent = `${timeLeft}초 후 자동으로 닫힙니다`;
+
+            // 1초마다 카운트다운 업데이트
+            adTimer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    closeAdPopup();
+                } else {
+                    document.getElementById('ad-timer-text').textContent = `${timeLeft}초 후 자동으로 닫힙니다`;
+                }
+            }, 1000);
+        }
+
+        // 광고 팝업 닫기 (X 버튼 혹은 자동 종료)
+        function closeAdPopup() {
+            clearInterval(adTimer);
+            views.adPopup.classList.add('hidden');
+            showRanking(); // 랭킹 화면으로 이동
+        }
+
+        function saveRecord(n, t) {
+            let r = JSON.parse(localStorage.getItem('schulte_v7') || '[]');
+            r.push({ n, t: parseFloat(t) });
+            r.sort((a, b) => a.t - b.t);
+            localStorage.setItem('schulte_v7', JSON.stringify(r.slice(0, 10)));
         }
 
         function showRanking() {
-            const records = JSON.parse(localStorage.getItem('schulte_v2') || '[]');
-            const list = document.getElementById('ranking-list');
-            list.innerHTML = records.map((r, i) => `
-                <tr class="border-b border-slate-50">
-                    <td class="py-5 font-black ${i < 3 ? 'text-blue-500' : 'text-slate-300'} text-lg">${i + 1}</td>
-                    <td class="py-5 font-bold text-slate-800">${r.nickname}</td>
-                    <td class="py-5 text-right font-mono font-bold text-blue-600">${r.time.toFixed(2)}s</td>
-                </tr>
-            `).join('') || '<tr><td colspan="3" class="py-20 text-center text-slate-400">첫 기록을 남겨보세요!</td></tr>';
+            const r = JSON.parse(localStorage.getItem('schulte_v7') || '[]');
+            document.getElementById('ranking-list').innerHTML = r.map((x, i) => `
+                <tr class="border-b border-slate-50"><td class="py-5 font-black text-blue-500 w-10 text-center">${i+1}</td>
+                <td class="py-5 font-bold text-slate-800 px-2">${x.n}</td>
+                <td class="py-5 text-right font-mono font-bold text-slate-900">${x.t.toFixed(2)}s</td></tr>
+            `).join('') || '<tr><td colspan="3" class="py-20 text-center text-slate-400">등록된 순위가 없습니다.</td></tr>';
             switchView('ranking');
         }
 
-        function goHome() {
-            clearInterval(timerInterval);
-            isGameRunning = false;
-            resultModal.classList.add('hidden');
-            switchView('intro');
-        }
+        function goHome() { clearInterval(timerInterval); clearInterval(adTimer); isGameRunning = false; resultModal.classList.add('hidden'); views.adPopup.classList.add('hidden'); switchView('intro'); }
     </script>
 </body>
 </html>
