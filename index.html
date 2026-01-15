@@ -22,8 +22,8 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-[22px] shadow-lg mb-4">
                     <span class="text-3xl text-white">⚡</span>
                 </div>
-                <h1 class="text-3xl font-black text-slate-900 mb-1 tracking-tight">슈미트 테이블</h1>
-                <p class="text-blue-600 font-bold text-sm">상금 혜택! 실시간 랭킹 챌린지</p>
+                <h1 class="text-3xl font-black text-slate-900 mb-1 tracking-tight">라플 순발력 챌린지</h1>
+                <p class="text-blue-600 font-bold text-sm">챌린지 참여하고 최고 상금에 도전하세요.</p>
             </div>
 
             <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-5">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="flex items-start space-x-3 text-sm font-medium text-slate-600 border-t border-slate-50 pt-4">
                     <span class="bg-blue-50 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs mt-0.5 flex-shrink-0">3</span>
-                    <p class="leading-snug">나의 랭킹을 확인하고 <strong class="text-blue-600 font-bold underline">100위권 상금</strong>에 도전하세요.</p>
+                    <p class="leading-snug">나의 랭킹을 확인하고 <strong class="text-blue-600 font-bold underline">최고 상금</strong>에 도전하세요.</p>
                 </div>
             </div>
 
@@ -55,36 +55,34 @@
     </div>
 
     <div id="view-game" class="hidden-view flex flex-col items-center justify-center min-h-screen p-4">
-        <div class="w-full max-w-sm flex flex-col">
-            <div class="flex justify-between items-center bg-white p-4 rounded-t-3xl border border-slate-100 shadow-sm relative z-20">
-                <div class="text-center flex-1 border-r border-slate-50">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">NEXT</span>
-                    <span id="next-number" class="block text-2xl font-black text-blue-600">1</span>
-                </div>
-                <div class="text-center flex-1">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TIME</span>
-                    <span id="timer" class="block text-2xl font-black text-slate-800 tabular-nums">0.00s</span>
-                </div>
+    <div class="w-full max-w-sm flex flex-col">
+        
+        <div class="flex justify-between items-center bg-white p-4 rounded-t-3xl border border-slate-100 border-b-0 shadow-sm relative z-20">
+            <div class="text-center flex-1 border-r border-slate-50">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">NEXT</span>
+                <span id="next-number" class="block text-2xl font-black text-blue-600">1</span>
             </div>
-
-            <div class="flex items-center justify-center bg-indigo-50 border-x border-indigo-100 h-12 relative z-20 px-4 text-center">
-                <span class="text-indigo-900 text-[14px] font-bold tracking-tight break-keep">
-                    우리가족을 위한 확실한 선택 교보라플 정기보험
-                </span>
+            <div class="text-center flex-1">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TIME</span>
+                <span id="timer" class="block text-2xl font-black text-slate-800 tabular-nums">0.00s</span>
             </div>
-
-            <div class="relative w-full rounded-b-3xl shadow-xl border border-slate-100 overflow-hidden bg-white z-10">
-                <div id="bg-ad-layer" class="absolute inset-0 flex items-center justify-center p-6 opacity-0 transition-opacity duration-500 z-0">
-                    <div id="bg-ad-content" class="w-full h-full rounded-2xl flex flex-col items-center justify-center text-center border-2 border-blue-200 p-4">
-                        <p class="text-blue-800 font-bold text-lg mb-1">가족을 위한 확실한 선택</p>
-                        <p class="text-blue-900 font-black text-3xl tracking-tight break-keep font-sans">교보라플<br>정기보험</p>
-                    </div>
-                </div>
-                <div id="game-board" class="grid grid-cols-5 gap-1.5 p-2 relative z-10"></div>
-            </div>
-            <button onclick="goHome()" class="mt-8 py-2 text-slate-400 text-xs font-medium underline underline-offset-4 text-center">그만하기</button>
         </div>
+
+        <div class="relative w-full rounded-b-3xl shadow-xl border border-slate-100 overflow-hidden bg-white z-10">
+            <div id="bg-ad-layer" class="absolute inset-0 flex items-center justify-center p-6 opacity-0 transition-opacity duration-500 z-0">
+                <div id="bg-ad-content" class="w-full h-full rounded-2xl flex flex-col items-center justify-center text-center border-2 border-blue-200 p-4">
+                    <p class="text-blue-800 font-bold text-xl mb-2">가족을 위한 확실한 선택</p>
+                    <p class="text-blue-900 font-black text-5xl tracking-tight break-keep font-sans leading-tight">
+                        교보라플<br>정기보험
+                    </p>
+                </div>
+            </div>
+            <div id="game-board" class="grid grid-cols-5 gap-1.5 p-2 pt-0 relative z-10"></div>
+        </div>
+        
+        <button onclick="goHome()" class="mt-8 py-2 text-slate-400 text-xs font-medium underline underline-offset-4 text-center">그만하기</button>
     </div>
+</div>
 
     <div id="view-ranking" class="hidden-view fixed inset-0 bg-white z-50 flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-blue-600">
@@ -93,8 +91,8 @@
         </div>
         
         <div class="bg-blue-50 px-6 py-3 flex justify-between items-center text-[11px] font-bold text-blue-800 border-b border-blue-100">
-            <span>👑 1-3등: 최대 1만원</span>
-            <span>🎁 10등 단위: 특별상</span>
+            <span>👑 1등: 1만P, 2등: 5천P, 3등: 3천P</span>
+            <span>🎁 10/20/30/40/50등: 특별상 1천P</span>
         </div>
 
         <div class="flex-1 overflow-y-auto">
@@ -121,7 +119,7 @@
                class="modal-ad-banner block rounded-2xl p-4 mb-6 border border-blue-100 shadow-sm">
                 <p class="text-blue-800 text-[10px] font-bold mb-0.5 opacity-80 uppercase">우리가족을 위한 확실한 선택</p>
                 <p class="text-blue-900 text-lg font-black leading-tight">교보라플 정기보험</p>
-                <p class="mt-1 text-blue-600 text-[10px] font-bold uppercase">상금 받고 혜택 더하기 →</p>
+                <p class="mt-1 text-blue-600 text-[10px] font-bold uppercase">상품 보러가기 →</p>
             </a>
 
             <button onclick="handleShowRankingClick()" class="w-full py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-100">
